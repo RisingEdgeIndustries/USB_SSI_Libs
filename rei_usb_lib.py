@@ -11,6 +11,7 @@
 # The Python logger module is always enabled for text file logging
 # and the console message log can be disabled or enabled by user.
 #
+# C:\Users\<username>\AppData\Local\Programs\Python
 #
 # TODO:
 # ----------------------
@@ -24,11 +25,21 @@
 #	are pointers and you can't actually modify their contents
 #	since they are not arrays.
 #
-# 4. 
+# 4. Add a return value for dump reg space that is all reg read
+#	data. Also add option for this call to print to screen with
+#	verbose -v flag or not. So user can just save returned reg
+#	data or have it print to screen or both.
 # 	
 #
 # 5. Might want to rename this lib to rei_usb20f_lib or something
 #	specific to the full speed bridge.
+#
+# 6. read_int1 funct needs some sort of local ep_size so other
+#	read functions that change self.EP_SIZE don't mess up INT
+#	64 byte endpoints - these never change size like BULK ones
+#	do. I tried making a 'local' variable in the func but it
+# 	didn't work. Need to read up on how to properly create local
+#	func variables in Python.
 #
 # ----------------------------------------------------------------
 # Disclaimer:
@@ -645,9 +656,9 @@ class USB20F_Device(object):
 
 		self.EPOUT_ACTIVE = self._EP_INT1_OUT
 		self.EPIN_ACTIVE = self._EP_INT1_IN
-		self.EP_SIZE = 64
-		self.ep_data_out = (ct.c_ubyte*(self.EP_SIZE))()
-		self.ep_data_in = (ct.c_ubyte*(self.EP_SIZE))()
+		self.local_EP_SIZE = 64
+		self.ep_data_out = (ct.c_ubyte*(self.local_EP_SIZE))()
+		self.ep_data_in = (ct.c_ubyte*(self.local_EP_SIZE))()
 
 		usb.claim_interface(self.dev_handle, 1)
 
@@ -656,11 +667,11 @@ class USB20F_Device(object):
 		# Handle Receive Case
 		# --------------------------------------
 		self.log.write("INFO", "-------- INT1 Report -----------")
-		self.log.write("INFO", f"EP1IN_SIZE: {self.EP_SIZE}, len: {len(self.ep_data_in)}")
+		self.log.write("INFO", f"EP1IN_SIZE: {self.local_EP_SIZE}, len: {len(self.ep_data_in)}")
 
 		# receive data
 		r = usb.bulk_transfer(self.dev_handle, self.EPIN_ACTIVE, self.ep_data_in, 
-								self.EP_SIZE, self.bulk_transferred, 500)	
+								self.local_EP_SIZE, self.bulk_transferred, timeout)	
 
 		if (r < 0):
 			self.log.write("ERROR", f"Total bytes transferred <{self.bulk_transferred.contents}> bytes!")
@@ -876,22 +887,22 @@ class USB20F_Device(object):
 
 		# adjust endpoint size and buffer if needed
 		if(ep_size != 64):
-			self.EP_SIZE = ep_size
-			self.ep_data_in = (ct.c_ubyte*(self.EP_SIZE))()
+			self.EP_SIZE_BULK = ep_size
+			self.ep_data_in = (ct.c_ubyte*(self.EP_SIZE_BULK))()
 		else:
-			self.EP_SIZE = 64
-			self.ep_data_in = (ct.c_ubyte*(self.EP_SIZE))()
+			self.EP_SIZE_BULK = 64
+			self.ep_data_in = (ct.c_ubyte*(self.EP_SIZE_BULK))()
 
 		usb.claim_interface(self.dev_handle, 2)
 		
 
 		# read bulk data
 		r = usb.bulk_transfer(self.dev_handle, self.EPIN_ACTIVE, self.ep_data_in, 
-									self.EP_SIZE, self.bulk_transferred, self.EP_TIMEOUT)	
+									self.EP_SIZE_BULK, self.bulk_transferred, self.EP_TIMEOUT)	
 		# error check
 		if (r < 0):
 			self.log.write("ERROR", f"ERROR: Total bytes transferred <{self.bulk_transferred.contents}> bytes!")
-			self.log.write("ERROR", f"ERROR: Expected to xfer <{self.EP_SIZE}> bytes!")
+			self.log.write("ERROR", f"ERROR: Expected to xfer <{self.EP_SIZE_BULK}> bytes!")
 			self.log.write("ERROR", f"ERROR: bulk_transfer() ret code <{r}> <{usb.error_name(r)}> bytes!")
 			return (1, r)
 		else:
@@ -1300,3 +1311,23 @@ class USB20F_Device(object):
 			print(f"ERROR: libusb ret code <{r[1]}> <{usb.error_name(r[1])}> bytes!")			
 		else:
 			print(f"Address: {self.CTRMODECR_ADDR:#08x}, Value: {r[1][0]}")
+
+#------------------------------------------------------------
+#
+# Name: reg_print():
+#
+# Description:
+#   Print formated register detailed bit information. This is
+#	for the reg_access.py module.
+#
+# Parameters:
+#	Register ADDR
+#	
+#
+# Return:
+#	NA
+#	Just prints string to console.
+#------------------------------------------------------------
+def reg_print(self, addr):
+	if(addr == 0):
+		print("reg 0")
