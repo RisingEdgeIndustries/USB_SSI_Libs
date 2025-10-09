@@ -1328,6 +1328,6 @@ class USB20F_Device(object):
 #	NA
 #	Just prints string to console.
 #------------------------------------------------------------
-def reg_print(self, addr):
+def reg_print(addr):
 	if(addr == 0):
 		print("reg 0")
