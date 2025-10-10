@@ -1328,6 +1328,266 @@ class USB20F_Device(object):
 #	NA
 #	Just prints string to console.
 #------------------------------------------------------------
-def reg_print(addr):
+def reg_print(addr, reg_val):
+
+	# format reg: 0
 	if(addr == 0):
-		print("reg 0")
+		val = reg_val & 0xF
+		# total register value
+		print("\n---------------------------------------------------------")
+		print(" Register Value")
+		print(f" {f'{addr:#010X}:({addr})':.<30}{f'{reg_val:#010X}':.>20}".replace("X", "x"))
+		print("---------------------------------------------------------\n")
+
+
+		val = (reg_val & 0x80000000) >> 31
+		# bit value [31]
+		print("\n//ERNVM: Erase NVMEM.")
+		print(f"{'bit [31]'}{f'{(val):#010X}':.>20}".replace("X", "x"))
+		print("\t*1: Trigger NV MEM erase") if(val == 1) else print("\t1: Trigger NV MEM erase")
+		print("\t*0: No erase") if(val == 0) else print("\t0: No erase")
+		print("\tRec: This bit is self clearing")
+
+
+		val = (reg_val & 0x40000000) >> 30
+		# bit value [30]
+		print("\n//USBRXFBCLR: Flush USB RX Frame Buffer.")
+		print(f"{'bit [30]'}{f'{(val):#010X}':.>20}".replace("X", "x"))
+		print("\t*1: Flush USB RX frame buffer") if(val == 1) else print("\t1: Flush USB RX frame buffer")
+		print("\t*0: No flush") if(val == 0) else print("\t0: No flush")
+		print("\tRec: This bit is self clearing")
+
+
+
+		val = (reg_val & 0x20000000) >> 29
+		# bit value [29]
+		print("\n//USBTXFBCLR: Flush USB TX Frame Buffer.")
+		print(f"{'bit [29]'}{f'{(val):#010X}':.>20}".replace("X", "x"))
+		print("\t*1: Flush USB TX frame buffer") if(val == 1) else print("\t1: Flush USB TX frame buffer")
+		print("\t*0: No flush") if(val == 0) else print("\t0: No flush")
+		print("\tRec: This bit is self clearing")
+
+
+		val = (reg_val & 0x10000000) >> 28
+		# bit value [28]
+		print("\n//SVWRNVM: Save Registers to NV MEM.")
+		print(f"{'bit [28]'}{f'{(val):#010X}':.>20}".replace("X", "x"))
+		print("\t*1: Save register to NV MEM") if(val == 1) else print("\t1: Save register to NV MEM")
+		print("\t*0: No save") if(val == 0) else print("\t0: No save")
+		
+
+		val = (reg_val & 0x8000000) >> 27
+		# bit value [27]
+		print("\n//BLLNCH: Boot Loader Launch.")
+		print(f"{'bit [27]'}{f'{(val):#010X}':.>20}".replace("X", "x"))
+		print("\t*1: Reset and Launch Bootloader") if(val == 1) else print("\t1: Reset and Launch Bootloader")
+		print("\t*0: Null") if(val == 0) else print("\t0: Null")
+		print("\tRec: This bit is self clearing")
+
+
+		val = (reg_val & 0x4000000) >> 26
+		# bit value [26]
+		print("\n//CLRSITXFC: Clear SSI TX Frame Counter.")
+		print(f"{'bit [26]'}{f'{(val):#010X}':.>20}".replace("X", "x"))
+		print("\t*1: Clear SSI TX frame counter") if(val == 1) else print("\t1: Clear SSI TX frame counter")
+		print("\t*0: No clear") if(val == 0) else print("\t0: No clear")
+		print("\tRec: This bit is self clearing")
+
+
+		val = (reg_val & 0x2000000) >> 25
+		# bit value [25]
+		print("\n//CLRSIRXFC: Clear SSI RX Frame Counter.")
+		print(f"{'bit [24]'}{f'{(val):#010X}':.>20}".replace("X", "x"))
+		print("\t*1: Clear SSI RX frame counter") if(val == 1) else print("\t1: Clear SSI RX frame counter")
+		print("\t*0: No clear") if(val == 0) else print("\t0: No clear")
+		print("\tRec: This bit is self clearing")
+
+
+		val = (reg_val & 0x1000000) >> 24
+		# bit value [24]
+		print("\n//CLRBLKSR: Clear BULK IF Status Register.")
+		print(f"{'bit [24]'}{f'{(val):#010X}':.>20}".replace("X", "x"))
+		print("\t*1: Clear USB BULK interface status register") if(val == 1) else print("\t1: Clear USB BULK interface status register")
+		print("\t*0: No clear") if(val == 0) else print("\t0: No clear")
+		print("\tRec: This bit is self clearing")
+
+
+
+		val = (reg_val & 0x800000) >> 23
+		# bit value [23]
+		print("\n//CLRINT1SR: Clear INT0 IF Status Register.")
+		print(f"{'bit [23]'}{f'{(val):#010X}':.>20}".replace("X", "x"))
+		print("\t*1: Clear USB INT0 interface status register") if(val == 1) else print("\t1: Clear USB INT0 interface status register")
+		print("\t*0: No clear") if(val == 0) else print("\t0: No clear")
+		print("\tRec: This bit is self clearing")
+
+
+
+		val = (reg_val & 0x400000) >> 22
+		# bit value [22]
+		print("\n//CLRINT1SR: Clear INT1 IF Status Register.")
+		print(f"{'bit [22]'}{f'{(val):#010X}':.>20}".replace("X", "x"))
+		print("\t*1: Clear USB INT1 interface status register") if(val == 1) else print("\t1: Clear USB INT1 interface status register")
+		print("\t*0: No clear") if(val == 0) else print("\t0: No clear")
+		print("\tRec: This bit is self clearing")
+
+
+
+		val = (reg_val & 0x200000) >> 21
+		# bit value [21]
+		print("\n//FRMTMTEN: Frame Time-out Enable.")
+		print(f"{'bit [21]'}{f'{(val):#010X}':.>20}".replace("X", "x"))
+		print("\t*1: SSI RX frame timeout enabled") if(val == 1) else print("\t1: SSI RX frame timeout enabled")
+		print("\t*0: SSI RX frame timeout disabled") if(val == 0) else print("\t0: SSI RX frame timeout disabled")
+		
+
+		val = (reg_val & 0x100000) >> 20
+		# bit value [20]
+		print("\n//SSITXECCLR: SSI TX Error counter clear.")
+		print(f"{'bit [20]'}{f'{(val):#010X}':.>20}".replace("X", "x"))
+		print("\t*1: Clear SSI TX error counter") if(val == 1) else print("\t1: Clear SSI TX error counter")
+		print("\t*0: No clear SSI TX error counter") if(val == 0) else print("\t0: No clear SSI TX error counter")
+		print("\tRec: This bit is self clearing")
+
+
+		val = (reg_val & 0x80000) >> 19
+		# bit value [19]
+		print("\n//SSIRXECCLR: SSI RX Error Counter Clear.")
+		print(f"{'bit [19]'}{f'{(val):#010X}':.>20}".replace("X", "x"))
+		print("\t*1: Clear SSI RX error counter") if(val == 1) else print("\t1: Clear SSI RX error counter")
+		print("\t*0: No clear SSI RX error counter") if(val == 0) else print("\t0: No clear SSI RX error counter")
+		print("\tRec: This bit is self clearing")
+
+
+
+		val = (reg_val & 0x40000) >> 18
+		# bit value [18]
+		print("\n//NVMBOOTN: NV MEM boot.")
+		print(f"{'bit [18]'}{f'{(val):#010X}':.>20}".replace("X", "x"))
+		print("\t*1: Boot with factory defaults") if(val == 1) else print("\t1: Boot with factory defaults")
+		print("\t*0: 0: Boot with NV MEM values") if(val == 0) else print("\t0: Boot with NV MEM values")
+
+
+		val = (reg_val & 0x20000) >> 17
+		# bit value [17]
+		print("\n//FRMTMARC: SSI RX frame timeout auto recovery.")
+		print(f"{'bit [17]'}{f'{(val):#010X}':.>20}".replace("X", "x"))
+		print("\t*1: Enable SSI RX frame timeout auto recovery") if(val == 1) else print("\t1: Enable SSI RX frame timeout auto recovery")
+		print("\t*0: Disable SSI RX frame timeout auto recover") if(val == 0) else print("\t0: Disable SSI RX frame timeout auto recover")
+
+
+		val = (reg_val & 0x10000) >> 16
+		# bit value [16]
+		print("\n//SSITXDPEN: SSI RX Logic Reset.")
+		print(f"{'bit [16]'}{f'{(val):#010X}':.>20}".replace("X", "x"))
+		print("\t*1: Logic reset") if(val == 1) else print("\t1: Logic reset")
+		print("\t*0: No logic reset") if(val == 0) else print("\t0: No logic reset")
+		print("\tRec: This bit is self-clearing and should always read as ‘0’.")	
+
+
+		val = (reg_val & 0x8000) >> 15
+		# bit value [15]
+		print("\n//SSITXDPEN: SSI TX data path enable.")
+		print(f"{'bit [15]'}{f'{(val):#010X}':.>20}".replace("X", "x"))
+		print("\t*1: SSI TX interface enabled") if(val == 1) else print("\t1: SSI TX interface enabled")
+		print("\t*0: SSI TX interface disabled") if(val == 0) else print("\t0: SSI TX interface disabled")
+
+
+		val = (reg_val & 0x4000) >> 14
+		# bit value [14]
+		print("\n//SSITXDPATEN: SSI TX data path auto disable.")
+		print(f"{'bit [14]'}{f'{(val):#010X}':.>20}".replace("X", "x"))
+		print("\t*1: SSI TX interface no auto disable") if(val == 1) else print("\t1: SSI TX interface no auto disable")
+		print("\t*0: SSI TX interface auto disable") if(val == 0) else print("\t0: SSI TX interface auto disable")		
+
+
+		val = (reg_val & 0x2000) >> 13
+		# bit value [13]
+		print("\n//INT1RXDPATEN: INT1 data path enable.")
+		print(f"{'bit [13]'}{f'{(val):#010X}':.>20}".replace("X", "x"))
+		print("\t*1: INT1 RX interface enabled") if(val == 1) else print("\t1: INT1 RX interface enabled")
+		print("\t*0: INT1 RX interface disabled") if(val == 0) else print("\t0: INT1 RX interface disabled")
+
+
+		val = (reg_val & 0x1000) >> 12
+		# bit value [12]
+		print("\n//INT1RXDPATEN: INT1 RX data path auto disable.")
+		print(f"{'bit [12]'}{f'{(val):#010X}':.>20}".replace("X", "x"))
+		print("\t*1: INT1 RX interface not auto disabled") if(val == 1) else print("\t1: INT1 RX interface not auto disabled")
+		print("\t*0: INT1 RX interface auto disabled") if(val == 0) else print("\t0: INT1 RX interface auto disabled")
+
+
+		val = (reg_val & 0x800) >> 11
+		# bit value [11]
+		print("\n//BLKRXDPEN: BULK data path enable.")
+		print(f"{'bit [11]'}{f'{(val):#010X}':.>20}".replace("X", "x"))
+		print("\t*1: BULK RX interface enabled") if(val == 1) else print("\t1: BULK RX interface enabled")
+		print("\t*0: BULK RX interface disabled") if(val == 0) else print("\t0: BULK RX interface disabled")
+
+ 
+		val = (reg_val & 0x400) >> 10
+		# bit value [10]
+		print("\n//BLKRXDPATEN: BULK RX data path auto disable.")
+		print(f"{'bit [10]'}{f'{(val):#010X}':.>20}".replace("X", "x"))
+		print("\t*1:  BULK RX interface not auto disabled") if(val == 1) else print("\t1:  Not auto disabled")
+		print("\t*0:  BULK RX interface auto disable") if(val == 0) else print("\t0:  Auto disable")
+
+		val = (reg_val & 0x200) >> 9
+		# bit value [9]
+		print("\n//SSIRXIFRDY: SSI RX Interface Ready.")
+		print(f"{'bit [9]'}{f'{(val):#010X}':.>20}".replace("X", "x"))
+		print("\t*1: SSI RX interface is ready for operation") if(val == 1) else print("\t1: SSI RTX interface is ready for operation")
+		print("\t*0: SSI RX interface is not ready for operation") if(val == 7) else print("\t0: SSI RX interface is not ready for operation")		
+
+		val = (reg_val & 0x100) >> 8
+		# bit value [8]
+		print("\n//SSITXIFRDY: SSI TX Interface Ready.")
+		print(f"{'bit [8]'}{f'{(val):#010X}':.>20}".replace("X", "x"))
+		print("\t*1: SSI TX interface is ready for operation") if(val == 1) else print("\t1: SSI TX interface is ready for operation")
+		print("\t*0: SSI TX interface is not ready for operation") if(val == 7) else print("\t0: SSI TX interface is not ready for operation")
+
+		val = (reg_val & 0xF0) >> 4
+		# bit values [7:4]
+		print("\n//SSIIFCLKRT: SSI Interface Clock Rates. This register setting determines the SSI TX clock rate (data rate).")
+		print(f"{'bits [7:4]'}{f'{(val):#010X}':.>20}".replace("X", "x"))
+		print("\t*1000 : 8MHz") if(val == 8) else print("\t1000 : 8MHz")
+		print("\t*0111 : 6MHz (default)") if(val == 7) else print("\t0111 : 6MHz (default)")
+		print("\t*0110 : 5MHz") if(val == 6) else print("\t0110 : 5MHz")
+		print("\t*0101 : 4MHz") if(val == 5) else print("\t0101 : 4MHz")
+		print("\t*0100 : 3MHz") if(val == 4) else print("\t0100 : 3MHz")
+		print("\t*0011 : 2Mhz") if(val == 3) else print("\t0011 : 2Mhz")
+		print("\t*0000-0010 : NA") if(val < 3) else print("\t0000-0010 : NA")
+
+		# bit values [3:0]
+		print("//TMTDLY: Frame timeout delay setting.  This applies to the SSI RX frame timeout duration.")
+		print(f"{'bits [3:0]'}{f'{(val):#010X}':.>20}".replace("X", "x"))		
+		print("\t*1000-1111 : Not Implemented") if(val > 7) else print("\t1000-1111 : Not Implemented")
+		print("\t*0111 : 250mS") if(val == 7) else print("\t0111 : 250mS")
+		print("\t*0110 : 100mS") if(val == 6) else print("\t0110 : 100mS")
+		print("\t*0101 : 50mS") if(val == 5) else print("\t0101 : 50mS")
+		print("\t*0100 : 25mS") if(val == 4) else print("\t0100 : 25mS")
+		print("\t*0011 : 10mS") if(val == 3) else print("\t0011 : 10mS")
+		print("\t*0010 : 5mS") if(val == 2) else print("\t0010 : 5mS")
+		print("\t*0001 : 2mS") if(val == 1) else print("\t0001 : 2mS")
+		print("\t*0000 : 1mS") if(val == 0) else print("\t0000 : 1mS")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
